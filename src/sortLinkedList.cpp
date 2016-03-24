@@ -18,6 +18,79 @@ struct node {
 	struct node *next;
 };
 
+void divide(struct node *res, struct node **front, struct node **back)
+{
+	struct node *fast, *slow;
+	if (res == NULL || res->next == NULL)
+	{
+		*front = res;
+	}
+	else
+	{
+		slow = res;
+		fast = (res->next);
+		while (fast)
+		{
+			fast = fast->next;
+			if (fast)
+			{
+				fast = fast->next;
+				slow = slow->next;
+			}
+		}
+		*front = res;
+		*back = slow->next;
+		slow->next = NULL;
+
+	}
+}
+struct node* merge(struct node *front, struct node *back)
+{
+	struct node *sort = NULL;
+	if (front == NULL)
+	{
+		return back;
+	}
+	if (back == NULL)
+	{
+		return front;
+	}
+	if (front->num <= back->num)
+	{
+		sort = front;
+		sort->next = (merge(front->next, back));
+	}
+	else
+	{
+		sort = back;
+		sort->next = (merge(front, back->next));
+	}
+
+	return sort;
+}
+void mergesort(struct node **head)
+{
+	struct node *front, *back = NULL;
+	if (*head == NULL || (*head)->next == NULL)
+	{
+	}
+	else
+	{
+		divide(*head, &front, &back);
+		mergesort(&front);
+		mergesort(&back);
+		*(head) = merge(front, back);
+	}
+}
 struct node * sortLinkedList(struct node *head) {
-	return NULL;
+
+	if (head)
+	{
+		mergesort(&head);
+		return head;
+	}
+	else
+	{
+		return NULL;
+	}
 }
